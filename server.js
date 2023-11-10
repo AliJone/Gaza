@@ -3,13 +3,16 @@ const MongoClient = require('mongodb').MongoClient;
 const { ObjectId } = require('mongodb');
 const app = express();
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json()); // To parse the incoming requests with JSON payloads
 app.use(express.static('public')); // To serve static files
 
 
-const url = 'mongodb+srv://AliJone:Ali_Jone786@ghazza.tkfxlx3.mongodb.net/?retryWrites=true&w=majority';
+const url = process.env.MONGODB_URI || "mongodb://localhost:27017";
 const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 async function connect() {
