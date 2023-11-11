@@ -1,4 +1,6 @@
 const express = require('express');
+const flash = require('connect-flash');
+const session = require('express-session');
 const MongoClient = require('mongodb').MongoClient;
 const { ObjectId } = require('mongodb');
 const app = express();
@@ -10,6 +12,12 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json()); // To parse the incoming requests with JSON payloads
 app.use(express.static('public')); // To serve static files
+app.use(session({
+    secret: 'secret', // Change the secret to a real secret key in your production app
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(flash());
 
 
 const url = process.env.MONGODB_URI || "mongodb://localhost:27017";
@@ -25,7 +33,7 @@ const collection = client.db("palastine").collection("products");
 
 app.get('/', async (req, res) => {
     const products = await collection.find({ status: { $ne: 'pending' }, }).toArray();
-    res.render('index', { products: products });
+    res.render('index', { products: products, success_msg: req.flash('success_msg') });
 });
 app.get('/product/:id', async (req, res) => {
     console.log(req.params.id);
@@ -76,6 +84,7 @@ app.post('/add-product', async (req, res) => {
     console.log(newProduct);
 
     await collection.insertOne(newProduct);
+    req.flash('success_msg', 'Product added successfully and is under review.');
     res.redirect('/'); // Redirect to the home page after adding
 });
 

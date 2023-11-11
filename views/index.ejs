@@ -15,6 +15,11 @@
 </head>
 <body>
     <div class="container mt-3">
+        <% if (success_msg.length > 0) { %>
+            <div class="alert alert-success">
+                <%= success_msg %>
+            </div>
+        <% } %>
         <h3>Add New Product</h3>
         <form action="/add-product" method="post" enctype="application/x-www-form-urlencoded" class="mb-4">
             <!-- Form fields with clear labels -->
