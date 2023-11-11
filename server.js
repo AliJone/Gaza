@@ -59,7 +59,7 @@ app.get('/search', async (req, res) => {
     }).toArray();
 
     // Render a page with the search results or the same index page with new data
-    res.render('index', { products: searchResults });
+    res.render('index', { products: searchResults, success_msg: req.flash('success_msg')});
 });
 
 app.post('/add-product', async (req, res) => {
